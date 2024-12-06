@@ -1,6 +1,6 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, status, Response
 from fastapi.params import Body
-from schemas.hotel.hotel_schema import Hotel
+from .schemas.hotel.hotel_schema import Hotel
 
 app = FastAPI()
 
