@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from pydantic import BaseModel
 
 
@@ -6,9 +6,10 @@ class Hotel(BaseModel):
     name: str
     address: str
     city: str
-    price: float
     stars: int
+    lowest_price: float
     accommodation: str
     amenities: List[str]
     email: str
     phone: str
+    photo_url: Optional[List[str]] = []
