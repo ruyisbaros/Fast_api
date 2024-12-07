@@ -62,7 +62,6 @@ def update_hotel(
                 status_code=status.HTTP_404_NOT_FOUND, detail="Hotel not found")
         db_hotel.update(payload.model_dump())
         db.commit()
-        db.refresh(db_hotel)
         return db_hotel.first()
     except Exception as e:
         raise HTTPException(
@@ -78,7 +77,7 @@ def delete_hotel(
         if not db_hotel.first():
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="Hotel not found")
-        db.delete(db_hotel.first())
+        db.delete(db_hotel.first(), synchronize_session=False)
         db.commit()
         return {"message": "Hotel deleted successfully"}
     except Exception as e:
