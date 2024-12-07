@@ -1,15 +1,41 @@
 from typing import List, Optional
 from pydantic import BaseModel
+from datetime import datetime
 
 
-class Hotel(BaseModel):
+class Hotels_Base(BaseModel):
     name: str
     address: str
     city: str
     stars: int
     lowest_price: float
-    accommodation: str
     amenities: List[str]
+    accommodation: str
     email: str
     phone: str
-    photo_url: Optional[List[str]] = []
+    photo_url: List[str] = []
+
+    class Config:
+        from_attributes = True
+
+
+class HotelCreate(Hotels_Base):
+    pass
+
+
+class Hotels(Hotels_Base):
+    id: int
+    name: str
+    address: str
+    city: str
+    stars: int
+    lowest_price: float
+    amenities: List[str]
+    accommodation: str
+    email: str
+    phone: str
+    photo_url: List[str] = []
+    created_at: datetime
+
+    class Config:
+        from_attributes = True

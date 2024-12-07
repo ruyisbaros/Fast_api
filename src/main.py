@@ -1,35 +1,25 @@
-from fastapi import FastAPI, status, Response
-from fastapi.params import Body
-from .schemas.hotel.hotel_schema import Hotel
+from .database import get_db, engine
+from fastapi import FastAPI, status, Response, Depends
+from fastapi.middleware.cors import CORSMiddleware
+from . import models
+from .routes import hotel_routes
 
 app = FastAPI()
+get_db()  # run DB connection
 
+models.Base.metadata.create_all(bind=engine)
 
-@app.get("/hotels")
-def get_hotels():
-    return {"message": "These are hotels"}
+# CORSMiddleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-
-@app.post("/hotels/create")
-def create_hotel(payload: Hotel):
-    print(payload.model_dump())
-    return {"data": payload}
-
-
-@app.patch("/hotels/{hotel_id}")
-def update_hotel(hotel_id: int, payload: Hotel):
-    print(f"Updating hotel with id: {hotel_id}")
-    print(payload.model_dump())
-    return {"data": payload}
-
-
-@app.delete("/hotels/{hotel_id}")
-def delete_hotel(hotel_id: int):
-    print(f"Deleting hotel with id: {hotel_id}")
-    return {"message": "Hotel deleted successfully"}
-
-
-@app.get("/hotels/{hotel_id}")
-def get_hotel(hotel_id: int):
-    print(f"Getting hotel with id: {hotel_id}")
-    return {"message": f"Hotel with id: {hotel_id}"}
+# SET ROUTES
+app.include_router(hotel_routes.router)
+# app.include_router(userRoutes.router)
+# app.include_router(authRoutes.router)
+# app.include_router(voteRoutes.router)
