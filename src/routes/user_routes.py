@@ -9,8 +9,9 @@ from .. import models
 from ..database import get_db
 from ..schemas.users.user_schema import UserCreate, UserOut, UserLogin
 from ..utils import hash_paswords, verify_password
+from ..oauth import create_access_token
 
-router = APIRouter(prefix="/users", tags=["Users"])
+router = APIRouter(prefix="/users", tags=["Users"])  # Tags for swagger
 
 
 @router.post("/auth/register", status_code=status.HTTP_201_CREATED, response_model=UserOut)
@@ -37,7 +38,7 @@ def create_user(
             status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 
-@router.post("/auth/login", response_model=UserOut)
+@router.post("/auth/login")
 def login_user(
         payload: OAuth2PasswordRequestForm = Depends(),
         db: Session = Depends(get_db)):
@@ -46,6 +47,7 @@ def login_user(
         # Check if user exists
         loggedIn = (
             db.query(models.User)
+            # OAuth keeps email as username and accepts credentials as form-data not a body
             .filter(models.User.email == payload.username)
             .first()
         )
@@ -61,7 +63,15 @@ def login_user(
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials"
             )
-        return loggedIn
+         # Create access token
+        access_token = create_access_token(
+            data={"user_id": loggedIn.id, "email": loggedIn.email}
+        )
+
+        return {
+            "token_type": "bearer",
+            "access_token": access_token,
+        }
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))

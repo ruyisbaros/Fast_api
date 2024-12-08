@@ -9,7 +9,7 @@ from ..database import get_db
 from ..schemas.hotel.hotel_schema import HotelCreate, Hotels
 
 
-router = APIRouter(prefix="/hotels", tags=["Hotels"])
+router = APIRouter(prefix="/hotels", tags=["Hotels"])  # Tags for swagger
 
 
 @router.get("/", response_model=List[Hotels])
