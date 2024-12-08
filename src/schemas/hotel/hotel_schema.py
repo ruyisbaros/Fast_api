@@ -25,16 +25,6 @@ class HotelCreate(Hotels_Base):
 
 class Hotels(Hotels_Base):
     id: int
-    name: str
-    address: str
-    city: str
-    stars: int
-    lowest_price: float
-    amenities: List[str]
-    accommodation: str
-    email: str
-    phone: str
-    photo_url: List[str] = []
     created_at: datetime
 
     class Config:

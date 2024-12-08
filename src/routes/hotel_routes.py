@@ -1,6 +1,6 @@
-from typing import List, Optional
+from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException, Response, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
@@ -20,7 +20,7 @@ def read_hotels(
     return hotels
 
 
-@router.post("/create", response_model=Hotels)
+@router.post("/create", status_code=status.HTTP_201_CREATED, response_model=Hotels)
 def create_hotel(
         payload: HotelCreate,
         db: Session = Depends(get_db),
