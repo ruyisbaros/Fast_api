@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from .. import models
 from ..database import get_db
 from ..schemas.hotel.hotel_schema import HotelCreate, Hotels
+from .. import oauth
 
 
 router = APIRouter(prefix="/hotels", tags=["Hotels"])  # Tags for swagger
@@ -24,7 +25,9 @@ def read_hotels(
 def create_hotel(
         payload: HotelCreate,
         db: Session = Depends(get_db),
+        user_id: int = Depends(oauth.get_current_user)
 ):
+    print(user_id)
     try:
         db_hotel = models.Hotels(**payload.model_dump())
         db.add(db_hotel)
@@ -54,7 +57,9 @@ def read_hotel_by_id(
 @router.patch("/update/{hotel_id}", response_model=Hotels)
 def update_hotel(
         hotel_id: int,
-        payload: HotelCreate, db: Session = Depends(get_db)):
+        payload: HotelCreate,
+        db: Session = Depends(get_db),
+        user_id: int = Depends(oauth.get_current_user)):
     try:
         db_hotel = db.query(models.Hotels).filter(models.Hotels.id == hotel_id)
         if not db_hotel.first():
@@ -71,7 +76,8 @@ def update_hotel(
 @router.delete("/delete/{hotel_id}")
 def delete_hotel(
         hotel_id: int,
-        db: Session = Depends(get_db)):
+        db: Session = Depends(get_db),
+        user_id: int = Depends(oauth.get_current_user)):
     try:
         db_hotel = db.query(models.Hotels).filter(models.Hotels.id == hotel_id)
         if not db_hotel.first():

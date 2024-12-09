@@ -7,7 +7,7 @@ from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 
 from .. import models
 from ..database import get_db
-from ..schemas.users.user_schema import UserCreate, UserOut, UserLogin
+from ..schemas.users.user_schema import UserCreate, UserOut, Token
 from ..utils import hash_paswords, verify_password
 from ..oauth import create_access_token
 
@@ -38,7 +38,7 @@ def create_user(
             status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 
-@router.post("/auth/login")
+@router.post("/auth/login", response_model=Token)
 def login_user(
         payload: OAuth2PasswordRequestForm = Depends(),
         db: Session = Depends(get_db)):
