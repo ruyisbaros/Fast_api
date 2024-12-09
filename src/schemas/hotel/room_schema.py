@@ -12,7 +12,7 @@ description	TEXT	Additional details about the room.
 photo_url	VARCHAR	Link to a photo of the room.
 """
 
-
+""" 
 class Room(BaseModel):
     id: int
     hotel_id: int
@@ -22,3 +22,4 @@ class Room(BaseModel):
     availability: bool
     description: str
     photo_url: List[str]
+ """

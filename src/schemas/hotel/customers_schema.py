@@ -11,7 +11,7 @@ status (e.g., confirmed, canceled)
 payment_status (e.g., paid, pending)
 """
 
-
+""" 
 class HotelCustomers(BaseModel):
     booking_id: int
     customer_id: int
@@ -21,4 +21,4 @@ class HotelCustomers(BaseModel):
     check_out_date: str
     booking_date: str
     status: str
-    payment_status: str
+    payment_status: str """

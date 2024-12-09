@@ -1,7 +1,8 @@
 from .database import Base, engine
 from sqlalchemy import Column, Integer, String, ForeignKey, ARRAY, Float, Boolean
-from sqlalchemy.sql.sqltypes import TIMESTAMP
+from sqlalchemy.sql.sqltypes import TIMESTAMP, DATETIME
 from sqlalchemy.sql.expression import text
+from sqlalchemy.orm import relationship
 
 
 class User(Base):
@@ -32,15 +33,19 @@ class Hotels(Base):
 class Bookings(Base):
     __tablename__ = "bookings"
     id = Column(Integer, primary_key=True, index=True, nullable=False)
-    hotel_id = Column(Integer, ForeignKey("hotels.id"))
+    hotel_id = Column(Integer, ForeignKey("hotels.id"),
+                      index=True, nullable=False)
     customer_id = Column(Integer, ForeignKey(
-        "hotel_customers.id"), nullable=False)
-    check_in_date = Column(TIMESTAMP(timezone=True), nullable=False)
-    check_out_date = Column(TIMESTAMP(timezone=True), nullable=False)
+        "users.id", ondelete='CASCADE'), nullable=False)
+    check_in_date = Column(DATETIME(), nullable=False)
+    check_out_date = Column(DATETIME(), nullable=False)
     created_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'))
 
+    hotel = relationship("Hotels")
+    customer = relationship("User")
 
-class Room(Base):
+
+""" class Room(Base):
     __tablename__ = "rooms"
     id = Column(Integer, primary_key=True, index=True, nullable=False)
     hotel_id = Column(Integer, ForeignKey("hotels.id"), nullable=False)
@@ -51,8 +56,8 @@ class Room(Base):
     description = Column(String)
     photo_url = Column(ARRAY(String), index=True)
     created_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'))
-
-
+ """
+""" 
 class HotelCustomer(Base):
     __tablename__ = "hotel_customers"
     id = Column(Integer, primary_key=True, index=True, nullable=False)
@@ -65,4 +70,4 @@ class HotelCustomer(Base):
                           server_default=text('now()'), nullable=False)
     status = Column(String, nullable=False)
     payment_status = Column(Boolean, nullable=False, server_default="False")
-    created_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'))
+    created_at = Column(TIMESTAMP(timezone=True), server_default=text('now()')) """
