@@ -1,5 +1,5 @@
 from .database import Base, engine
-from sqlalchemy import Column, Integer, String, ForeignKey, ARRAY, Float, Boolean
+from sqlalchemy import Column, Integer, String, ForeignKey, ARRAY, Float, Boolean, DateTime
 from sqlalchemy.sql.sqltypes import TIMESTAMP, DATETIME
 from sqlalchemy.sql.expression import text
 from sqlalchemy.orm import relationship
@@ -37,8 +37,8 @@ class Bookings(Base):
                       index=True, nullable=False)
     customer_id = Column(Integer, ForeignKey(
         "users.id", ondelete='CASCADE'), nullable=False)
-    check_in_date = Column(DATETIME(), nullable=False)
-    check_out_date = Column(DATETIME(), nullable=False)
+    check_in_date = Column(DateTime, nullable=False)
+    check_out_date = Column(DateTime, nullable=False)
     created_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'))
 
     hotel = relationship("Hotels")
